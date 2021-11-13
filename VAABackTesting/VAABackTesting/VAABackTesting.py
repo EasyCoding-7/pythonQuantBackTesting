@@ -23,6 +23,24 @@ def get_momentum(df_VAA, x):
     
     return momentum
 
+# VAA 전략 기준에 맞춰 자산 선택 
+def select_asset(x): 
+    asset = pd.Series([0,0], index=['ASSET','PRICE']) 
+    
+    # 공격 자산이 모두 0이상이면, 공격 자산 중 최고 모멘텀 자산 선정 
+    if x['SPY_M'] > 0 and x['VEA_M'] > 0 and x['EEM_M'] > 0 and x['AGG_M'] > 0: 
+        max_momentum = max(x['SPY_M'],x['VEA_M'],x['EEM_M'],x['AGG_M']) 
+        
+    # 공격 자산 중 하나라도 0이하라면, 방어 자산 중 최고 모멘텀 자산 선정 
+    else : 
+        max_momentum = max(x['LQD_M'],x['SHY_M'],x['IEF_M']) 
+        
+    asset['ASSET'] = x[x == max_momentum].index[0][:3] 
+    asset['PRICE'] = x[asset['ASSET']] 
+    
+    return asset
+
+
 def main():
     pd.options.display.float_format = '{:.2f}'.format 
 
@@ -55,7 +73,11 @@ def main():
     df_VAA = df_VAA.resample(rule='M').apply(lambda x: x[-1]) 
     df_VAA.head(10)
 
-    #print(df_VAA) # print to Console
+    # 매월 선택할 자산과 가격 
+    df_VAA[['ASSET','PRICE']] = df_VAA.apply(lambda x: select_asset(x), axis=1) 
+    df_VAA.head(10)
+
+    print(df_VAA) # print to Console
     df_VAA.to_csv('./outPut.csv', sep=',', na_rep="NaN") # printf to File
 
 
