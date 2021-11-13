@@ -44,8 +44,8 @@ def select_asset(x):
 def main():
     pd.options.display.float_format = '{:.2f}'.format 
 
-    start_day = datetime.date(2009,1,2) # 시작일 
-    end_day = datetime.date(2021,11,13) # 종료일 
+    start_day = datetime.date(2010,1,1) # 시작일 
+    end_day = datetime.date(2021,9,22) # 종료일 
 
     # 공격자산 
     SPY = pdr.get_data_yahoo('SPY', start_day - datetime.timedelta(days=365), end_day)['Adj Close'] 
@@ -71,13 +71,39 @@ def main():
     
     # 매월 말일 데이터만 추출(리밸런싱에 사용) 
     df_VAA = df_VAA.resample(rule='M').apply(lambda x: x[-1]) 
-    df_VAA.head(10)
+    # df_VAA.head(10)
 
     # 매월 선택할 자산과 가격 
     df_VAA[['ASSET','PRICE']] = df_VAA.apply(lambda x: select_asset(x), axis=1) 
-    df_VAA.head(10)
+    # df_VAA.head(10)
 
-    print(df_VAA) # print to Console
+    # 매월 수익률 & 누적 수익률 계산 
+    df_VAA['PROFIT'] = 0 
+    df_VAA['PROFIT_ACC'] = 0 
+    
+
+    for i in range(len(df_VAA)): 
+        profit = 0 
+        if i != 0: 
+            
+            #지난달과 동일 자산 보유 
+            if df_VAA.iloc[i]['ASSET'] == df_VAA.iloc[i-1]['ASSET']: 
+                profit = (df_VAA.iloc[i]['PRICE'] - df_VAA.iloc[i-1]['PRICE']) / df_VAA.iloc[i-1]['PRICE'] * 100 
+                
+            #지난달과 동일 자산 보유 
+            else : 
+                profit = (df_VAA.iloc[i][df_VAA.iloc[i-1]['ASSET']] - df_VAA.iloc[i-1]['PRICE']) / df_VAA.iloc[i-1]['PRICE'] * 100 
+                
+            df_VAA.loc[df_VAA.index[i], 'PROFIT'] = profit 
+            df_VAA.loc[df_VAA.index[i], 'PROFIT_ACC'] = ((1+df_VAA.loc[df_VAA.index[i-1], 'PROFIT_ACC']/100)*(1+profit/100)-1)*100
+
+
+    df_VAA.tail(10)
+    plt.figure(figsize=(15,8)) 
+    sns.lineplot(data=df_VAA, x=df_VAA.index, y=df_VAA['PROFIT_ACC'])
+    plt.show()
+
+    # print(df_VAA) # print to Console
     df_VAA.to_csv('./outPut.csv', sep=',', na_rep="NaN") # printf to File
 
 
