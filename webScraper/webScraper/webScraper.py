@@ -1,25 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 
-def get_per(code):
-    url = "https://finance.naver.com/item/main.naver?code=" + code
-    html = requests.get(url).text
+url = "http://finance.naver.com/item/main.nhn?code=005930"
+html = requests.get(url).text
+ 
+soup = BeautifulSoup(html, "html5lib")
+# tags = soup.select("table tbody tr td em")
+tags = soup.select("#tab_con1 > div:nth-of-type(2) > table > tbody > tr.strong > td > em")
 
-    soup = BeautifulSoup(html, "html5lib")
-    tags = soup.select("#_per")
-    tag = tags[0]
-
-    return tag.text
-
-def get_dividend(code):
-    url = "https://finance.naver.com/item/main.naver?code=" + code
-    html = requests.get(url).text
-
-    soup = BeautifulSoup(html, "html5lib")
-    tags = soup.select("#_dvr")
-    tag = tags[0]
-
-    return tag.text
-
-print(get_per("005930"))
-print(get_dividend("005930"))
+for tag in tags:
+    print(tag.text)
