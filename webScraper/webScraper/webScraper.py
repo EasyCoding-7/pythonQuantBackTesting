@@ -1,11 +1,25 @@
-
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://finance.naver.com/item/main.naver?code=005930"
-html = requests.get(url).text
+def get_per(code):
+    url = "https://finance.naver.com/item/main.naver?code=" + code
+    html = requests.get(url).text
 
-soup = BeautifulSoup(html, "html5lib")
-tags = soup.select("#_per")
-tag = tags[0]
-print(tag.text)
+    soup = BeautifulSoup(html, "html5lib")
+    tags = soup.select("#_per")
+    tag = tags[0]
+
+    return tag.text
+
+def get_dividend(code):
+    url = "https://finance.naver.com/item/main.naver?code=" + code
+    html = requests.get(url).text
+
+    soup = BeautifulSoup(html, "html5lib")
+    tags = soup.select("#_dvr")
+    tag = tags[0]
+
+    return tag.text
+
+print(get_per("005930"))
+print(get_dividend("005930"))
