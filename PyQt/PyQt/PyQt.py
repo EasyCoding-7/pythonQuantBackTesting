@@ -1,25 +1,13 @@
 import sys
 from PyQt5.QtWidgets import *
+from PyQt5 import uic
 
-class MyWindow(QMainWindow):
+from_class = uic.loadUiType("./qtDesignerTest.ui")[0]
+
+class MyWindow(QMainWindow, from_class):
     def __init__(self):
         super().__init__()
-        self.setGeometry(100, 200, 300, 400)
-        self.setWindowTitle("PyQt")
-        # self.setWindowIcon(QIcon("icon.png"))
-
-        # 버튼추가
-        btn = QPushButton("버튼1", self)
-        btn.move(10, 10)
-
-        btn2 = QPushButton("버튼2", self)
-        btn2.move(10, 40)
-
-        # 버튼에 이벤트 연결
-        btn.clicked.connect(self.btn_clicked)
-
-    def btn_clicked(self):
-        print("버튼 클릭")
+        self.setupUi(self)
 
 app = QApplication(sys.argv)
 window = MyWindow()
