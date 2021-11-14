@@ -6,25 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>622</width>
-    <height>600</height>
+    <width>494</width>
+    <height>161</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="eventBtn">
+   <widget class="QPushButton" name="getCoinBtn">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>20</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>코인 시세 조회</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>171</width>
-      <height>81</height>
+      <width>191</width>
+      <height>41</height>
      </rect>
-    </property>
-    <property name="text">
-     <string>Qt Designer Test</string>
     </property>
    </widget>
   </widget>
@@ -33,7 +43,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>622</width>
+     <width>494</width>
      <height>21</height>
     </rect>
    </property>
