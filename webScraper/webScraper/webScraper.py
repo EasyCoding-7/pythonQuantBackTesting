@@ -1,12 +1,12 @@
-import requests
-from bs4 import BeautifulSoup
+import requests 
 
-url = "http://finance.naver.com/item/main.nhn?code=005930"
-html = requests.get(url).text
- 
-soup = BeautifulSoup(html, "html5lib")
-# tags = soup.select("table tbody tr td em")
-tags = soup.select("#tab_con1 > div:nth-of-type(2) > table > tbody > tr.strong > td > em")
+r = requests.get("https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=btc_krw")
+bitcoin = r.json() 
 
-for tag in tags:
-    print(tag.text)
+print(bitcoin) 
+print(type(bitcoin))
+
+print(bitcoin['last'])
+print(bitcoin['bid'])
+print(bitcoin['ask'])
+print(bitcoin['volume'])
